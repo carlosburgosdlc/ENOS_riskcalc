@@ -1,5 +1,9 @@
-node_modules/
-.DS_Store
-*.log
 __pycache__/
 *.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+cache/
+*.pdf
+.DS_Store

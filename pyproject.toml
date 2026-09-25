@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "superninio"
+version = "2.0.0"
+description = "Índice de riesgo climático para café ante El Niño / Superniño, con subagente de WhatsApp y reporte PDF"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "reportlab>=4.0",
+  "anthropic>=1.0",
+  "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pypdf>=4"]
+
+[tool.setuptools.packages.find]
+include = ["superninio*"]
+
+[tool.setuptools.package-data]
+"superninio.datos" = ["oni.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

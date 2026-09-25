@@ -16,16 +16,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python3 scripts/update_oni.py
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - run: npm test
+      - run: pip install -e ".[dev]"
+      - run: python scripts/update_oni.py
+      - run: pytest -q
       - name: Commit si cambió
         run: |
-          if git diff --quiet data/oni.js; then echo "Sin cambios"; exit 0; fi
+          if git diff --quiet superninio/datos/oni.json; then echo "Sin cambios"; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/oni.js
+          git add superninio/datos/oni.json
           git commit -m "data: actualizar ONI desde NOAA CPC"
           git push
