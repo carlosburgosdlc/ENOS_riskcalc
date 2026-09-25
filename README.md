@@ -22,6 +22,21 @@ Todo el cálculo corre en el navegador; no hay backend ni API keys.
 **Antes de usar resultados reales:** ejecute la acción *Actualizar ONI (NOAA CPC)* (pestaña Actions → Run workflow).
 La serie ONI incluida en `data/oni.js` es una transcripción provisional (1950–2024) y la app muestra un aviso hasta que se regenere desde NOAA con `scripts/update_oni.py`. La acción corre además cada mes.
 
+## Uso sin interfaz (integración con agentes)
+
+`js/calcular.js` expone una sola función: entra JSON, sale JSON.
+
+```js
+import { calcularRiesgo, ESQUEMA_ENTRADA } from './js/calcular.js';
+const out = await calcularRiesgo({ lat: 4.98, lon: -75.6, edad_meses: 48, soqueado: false, escenario: 'super' });
+// out.indice.valor, out.indice.significativo, out.meses[12], out.eventos_historicos, out.recomendaciones, out.advertencias
+```
+
+- CLI: `echo '{"lat":4.98,"lon":-75.6,"edad_meses":48,"soqueado":false,"escenario":"super"}' | node js/calcular.js`
+- `ESQUEMA_ENTRADA` es un JSON Schema listo para usarse como definición de la tool del agente.
+- `calcularRiesgo(entrada, { obtenerClima })` permite inyectar caché u otra fuente de clima; es el único paso con I/O.
+- Determinista (bootstrap con semilla fija). Errores de validación con mensaje explícito.
+
 ## Metodología
 
 ### 1. Datos
@@ -98,6 +113,7 @@ Se reporta además el IRCC del **mismo cafetal en año neutro** (ONI = 0) y la d
 ## Estructura
 ```
 index.html, css/styles.css
+js/calcular.js        punto de entrada único (JSON → JSON, CLI)
 js/stats.js           OLS, t de Student, BH-FDR, bootstrap (sin dependencias)
 js/climate.js         diario → mensual, D3, estandarización
 js/scenario.js        eventos El Niño, plantilla y trayectoria del ONI
