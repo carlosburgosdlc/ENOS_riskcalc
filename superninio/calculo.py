@@ -95,12 +95,14 @@ def calcular_riesgo(
     obtener_elevacion_fn: Callable[[float, float], float | None] = obtener_elevacion,
     replicas: int = 1000,
     hoy: dt.date | None = None,
+    oni: tuple[dict, dict] | None = None,
 ) -> dict:
-    """Calcula el IRCC. El único I/O es la descarga de clima y altitud (inyectables)."""
+    """Calcula el IRCC. El único I/O es la descarga de clima y altitud (inyectables).
+    oni: (serie, meta) opcional; por defecto la serie de superninio/datos/oni.json."""
     validar(entrada)
     hoy = hoy or dt.date.today()
     lat, lon = float(entrada["lat"]), float(entrada["lon"])
-    oni, oni_meta = cargar_oni()
+    oni, oni_meta = oni or cargar_oni()
 
     # 1. Datos externos
     clima = obtener_clima_fn(lat, lon)

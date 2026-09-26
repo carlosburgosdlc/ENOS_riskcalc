@@ -1,9 +1,15 @@
 """El port a Python reproduce exactamente la implementación JavaScript original (v1.0.0)."""
+import json
+
 import pytest
 
 from superninio.calculo import calcular_riesgo
 
-from .conftest import HOY
+from .conftest import FIXTURES, HOY
+
+# Las referencias JS se generaron con la serie ONI provisional de la v1: se fija esa misma serie.
+_ONI = json.loads((FIXTURES / "oni_provisional_v1.json").read_text())
+ONI_V1 = ({int(k): v for k, v in _ONI["oni"].items()}, _ONI["meta"])
 
 NUMERICOS = ["oni", "sensibilidad_sequia", "sensibilidad_calor", "prob_mes_seco", "prob_mes_seco_neutro",
              "prob_mes_caliente", "prob_mes_caliente_neutro", "cambio_lluvia_pct", "cambio_tmax_c",
@@ -14,7 +20,8 @@ NUMERICOS = ["oni", "sensibilidad_sequia", "sensibilidad_calor", "prob_mes_seco"
 def test_paridad(referencia_js, i):
     caso = referencia_js["casos"][i]
     out = calcular_riesgo(caso["entrada"], obtener_clima_fn=lambda *_: caso["clima"],
-                          obtener_elevacion_fn=lambda *_: caso["elevacion"], replicas=referencia_js["replicas"], hoy=HOY)
+                          obtener_elevacion_fn=lambda *_: caso["elevacion"], replicas=referencia_js["replicas"], hoy=HOY,
+                          oni=ONI_V1)
     js = caso["salida"]
     for k, v in js["indice"].items():
         if k != "interpretacion":
