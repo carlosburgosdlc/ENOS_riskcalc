@@ -2,7 +2,7 @@
 "meta": {
 "provisional": false,
 "fuente": "https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt",
-"actualizado": "2026-10-12"
+"actualizado": "2026-11-12"
 },
 "oni": {
 "1950": [
@@ -1078,7 +1078,7 @@
 1.39,
 1.8,
 2.16,
-null,
+2.46,
 null,
 null,
 null
